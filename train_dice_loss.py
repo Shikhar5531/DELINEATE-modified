@@ -89,7 +89,10 @@ def dice_loss(labels, logits, smooth=1e-6):
 
     # Computing DICE for each image in given batch size
     intersection = tf.reduce_sum(y_true * y_pred, axis=[1, 2])
-    union = tf.reduce_sum(y_true, axis=[1, 2] + tf.reduce_sum(y_pred, axis=[1, 2]))
+    union = (
+        tf.reduce_sum(y_true, axis=[1, 2]) +
+        tf.reduce_sum(y_pred, axis=[1, 2])
+    )
     dice = (2 * intersection + smooth) / (union + smooth)
 
     # Averaging over batch
